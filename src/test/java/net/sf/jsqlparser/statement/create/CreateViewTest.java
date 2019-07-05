@@ -9,14 +9,16 @@
  */
 package net.sf.jsqlparser.statement.create;
 
-import java.io.StringReader;
 import junit.framework.TestCase;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.create.view.CreateView;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-import static net.sf.jsqlparser.test.TestUtils.*;
+
+import java.io.StringReader;
+
+import static net.sf.jsqlparser.test.TestUtils.assertSqlCanBeParsedAndDeparsed;
 
 public class CreateViewTest extends TestCase {
 
@@ -102,5 +104,9 @@ public class CreateViewTest extends TestCase {
 
     public void testCreateTemporaryViewIssue665() throws JSQLParserException {
         assertSqlCanBeParsedAndDeparsed("CREATE VIEW foo(\"BAR\") AS WITH temp AS (SELECT temp_bar FROM foobar) SELECT bar FROM temp");
+    }
+
+    public void testOrReplaceViewWithWithStatement() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("CREATE OR REPLACE VIEW foo AS (WITH t as (Select 1 from dual) Select * from t) ");
     }
 }
